@@ -6,7 +6,6 @@ app = FastAPI(
     title="WUN Swarm Public Edge", description="Global Affiliate Arbitrage Hub"
 )
 
-# Indirizzo della Master API su Hetzner
 HETZNER_MASTER_URL = "http://204.168.219.251:8000/api/links"
 
 
@@ -18,18 +17,19 @@ async def public_index():
       data = response.json()
 
     links = data.get("data", [])
+    total = len(links)
 
-    # Genera una pagina HTML dinamica con i micro-business pronti per l'arbitraggio
-    html_content = """
+    # Regole CSS corrette con doppie graffe per evitare conflitti
+    html_content = f"""
         <html>
             <head>
                 <title>WUN Swarm - Micro Business Hub</title>
                 <style>
-                    body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px; }
-                    h1 { color: #38bdf8; }
-                    .card { background: #1e293b; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #334155; }
-                    a { color: #38bdf8; text-decoration: none; font-weight: bold; }
-                    a:hover { text-decoration: underline; }
+                    body {{ font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px; }}
+                    h1 {{ color: #38bdf8; }}
+                    .card {{ background: #1e293b; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #334155; }}
+                    a {{ color: #38bdf8; text-decoration: none; font-weight: bold; }}
+                    a:hover {{ text-decoration: underline; }}
                 </style>
             </head>
             <body>
@@ -37,9 +37,7 @@ async def public_index():
                 <p>Totale opportunità attive: <strong>{total}</strong></p>
         """
 
-    html_content = html_content.format(total=len(links))
-
-    for item in links[:50]:  # Mostra i primi 50 in anteprima pubblica
+    for item in links[:50]:
       intent = item.get("intent", "Offerta")
       url = item.get("monetized_url", "#")
       html_content += f"""
